@@ -29,6 +29,7 @@ min_cost = inf;
 best_dir_final_1 = [];
 best_dir_final_2 = [];
 best_dir_final_3 = [];
+all_ite = 0;
 for i = 1:length(city_sort)
     map = [zeros(1, city_sort(i, 1)),... firt truck
         ones(1, city_sort(i, 2)), ... second truck
@@ -36,6 +37,7 @@ for i = 1:length(city_sort)
     [cost_1, ite_num_1, best_dir_1] = Travel_calculator(map == 0, location);
     [cost_2, ite_num_2, best_dir_2] = Travel_calculator(map == 1, location);
     [cost_3, ite_num_3, best_dir_3] = Travel_calculator(map == 2, location);
+    all_ite = all_ite + ite_num_1 + ite_num_2 + ite_num_3;
     if max([cost_1, cost_2, cost_3]) < min_cost
         min_cost = max([cost_1, cost_2, cost_3]);
         best_dir_final_1 = best_dir_1;
