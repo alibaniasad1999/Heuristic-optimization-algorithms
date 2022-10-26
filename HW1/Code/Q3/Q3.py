@@ -110,7 +110,7 @@ for i in range(len(numerical_map)):
 
 
 
-s = 9 ; d = 15
+s = 15 ; d = 9
 print ("Following are all different paths from % d to % d :" %(s, d))
 g.printAllPaths(s, d)
 print('#############')
