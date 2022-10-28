@@ -71,6 +71,51 @@ end
 
 map = base_map; % delete path from map
 
+print('../../Figure/Q3/1th_path.png','-dpng','-r400');
+
+for i=1:length(paths)
+    [x_sol, y_sol] = find(graph_map == str2double(paths(10, i)));
+    if graph_map(x_sol, y_sol) == end_graph
+        break;
+    end
+    if graph_map(x_sol, y_sol) == start_graph
+        continue;
+    end
+    map(x_sol, y_sol) = 3;
+    colormap([0 0 0; 1 1 1; 1 0 0; 0 0 1])
+    imagesc(x, y, map);
+    axis equal
+    grid on
+    xticks(0:5)
+    yticks(0:5)
+    axis([0, 5, 0, 5])
+    pause(0.5);
+end
+print('../../Figure/Q3/10th_path.png','-dpng','-r400');
+map = base_map; % delete path from map
+
+for i=1:length(paths)
+    [x_sol, y_sol] = find(graph_map == str2double(paths(50, i)));
+    if graph_map(x_sol, y_sol) == end_graph
+        break;
+    end
+    if graph_map(x_sol, y_sol) == start_graph
+        continue;
+    end
+    map(x_sol, y_sol) = 3;
+    colormap([0 0 0; 1 1 1; 1 0 0; 0 0 1])
+    imagesc(x, y, map);
+    axis equal
+    grid on
+    xticks(0:5)
+    yticks(0:5)
+    axis([0, 5, 0, 5])
+    pause(0.5);
+end
+print('../../Figure/Q3/50th_path.png','-dpng','-r400');
+map = base_map; % delete path from map
+
+
 
 
 

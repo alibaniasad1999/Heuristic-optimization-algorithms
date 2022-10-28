@@ -35,7 +35,7 @@ class Graph:
 		# If current vertex is same as destination, then print
 		# current path[]
 		if u == d:
-			print(path)
+			# print(path)
 			allpaths.append(path.copy())
 		else:
 			# If current vertex is not destination
@@ -83,7 +83,7 @@ for i in range(len(Map)*len(Map)):
 	else:
 		numerical_map[i//len(Map)][i%len(Map)] = inf
 
-print(numerical_map)
+# print(numerical_map)
 
 g = Graph(max(max(numerical_map)) + 1)
 for i in range(len(numerical_map)):
@@ -111,12 +111,12 @@ for i in range(len(numerical_map)):
 
 
 s = 15 ; d = 9
-print ("Following are all different paths from % d to % d :" %(s, d))
+# print ("Following are all different paths from % d to % d :" %(s, d))
 g.printAllPaths(s, d)
-print('#############')
-print(allpaths)
-print('#############')
-print(len(allpaths))
+# print('#############')
+# print(allpaths)
+# print('#############')
+# print(len(allpaths))
 
 sorted_paths = sorted(allpaths, key=len)
 for num, path in enumerate(sorted_paths):
