@@ -66,16 +66,24 @@ def fitness(bitstring):
 # mating Double Tournament Selection without replacing
 def selection(population, tournament_size):
     selected_population = np.random.randint(len(population), size=tournament_size, dtype=int)
-    min_cost = math.inf
-    max_cost = -math.inf
-    for i in range(tournament_size):
-        if fitness(population[selected_population[i]]) < min_cost:
-            min_cost = fitness(population[selected_population[i]])
-            min_index = selected_population[i]
-        if fitness(population[selected_population[i]]) > max_cost:
-            max_cost = fitness(population[selected_population[i]])
-            max_index = selected_population[i]
-    return population[min_index], population[max_index] # return the best and the worst for parent and dead
+
+    tournament_list = np.zeros(tournament_size, dtype=float)
+    for i in range(len(selected_population)):
+        tournament_list[i] = fitness(population[selected_population[i]])
+    
+    # selecting the dead
+    sum_tournament_list = np.sum(tournament_list)
+    tournament_list = tournament_list / sum_tournament_list
+    dead = population[np.random.choice(selected_population, 1, p=tournament_list)[0]]
+
+    # selecting the beat
+
+    tournament_list = 1 / tournament_list
+    sum_tournament_list = np.sum(tournament_list)
+    tournament_list = tournament_list / sum_tournament_list
+    parent = population[np.random.choice(selected_population, 1, p=tournament_list)[0]]
+
+    return parent, dead # return the best and the worst for parent and dead
 
 
 
@@ -163,10 +171,10 @@ if __name__ == '__main__':
     # problem configuration
     bitstring_length = 14
     # algorithm configuration
-    pop_size = 1000
-    mutation_rate = 0.01
-    generations = 10000
-    tournament_size = 10
+    pop_size = 100
+    mutation_rate = 0.5
+    generations = 50000
+    tournament_size = 20
     # execute the algorithm
     best, population = genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, tournament_size)
     print("Done.")
@@ -192,9 +200,3 @@ fig1, ax1 = plt.subplots()
 ax1.imshow(population, cmap='hot', interpolation='nearest')
 plt.savefig(name+'map', format='eps')
 plt.show()
-
-
-
-
-############ all rolet willll for parent and dead ################
-############### if child better than dead, replace child with dead with some random ################
