@@ -149,15 +149,15 @@ if __name__ == '__main__':
     # problem configuration
     bitstring_length = int(9*7) # 7 parameters and 9 bits for each parameter
     # algorithm configuration
-    pop_size = 20
-    mutation_rate = 0.5
-    generations = 10000
-    tournament_size = 8
+    pop_size = 10
+    mutation_rate = 0.8
+    generations = 50000
+    tournament_size = 2
     # execute the algorithm
     best, population = genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, tournament_size)
     print("Done.")
 
-print(best)
+print(bitstring_to_real(best), best, fitness(best))
 
 plt.rcParams['text.usetex'] = True
 fig, ax = plt.subplots()
