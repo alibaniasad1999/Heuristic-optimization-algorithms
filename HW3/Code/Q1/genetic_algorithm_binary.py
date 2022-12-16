@@ -45,10 +45,10 @@ def random_int(n):
 
 # convert a bit string to a real number in the range [lower, upper]
 def bitstring_to_real(bitstring):
-    answer = np.zeros(int(len(bitstring)/9), dtype=float)
+    answer = np.zeros(int(len(bitstring)/8), dtype=float)
     for i in range(len(bitstring)):
-        if i % 9 == 0:
-            answer[int(i/9)] = 2**4* bitstring[i] + 2**3* bitstring[i+1] + 2**2* bitstring[i+2] + 2**1* bitstring[i+3] + 2**0* bitstring[i+4] + 2**-1* bitstring[i+5] + 2**-2* bitstring[i+6] + 2**-3* bitstring[i+7] + 2**-4* bitstring[i+8]
+        if i % 8 == 0:
+            answer[int(i/8)] = 2**3* bitstring[i] + 2**2* bitstring[i+1] + 2**1* bitstring[i+2] + 2**0* bitstring[i+3] + 2**-1* bitstring[i+4] + 2**-2* bitstring[i+5] + 2**-3* bitstring[i+6] + 2**-4* bitstring[i+7]
     return answer
 
 # create an initial population of random bit strings
@@ -147,11 +147,11 @@ def genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, to
 # run the algorithm
 if __name__ == '__main__':
     # problem configuration
-    bitstring_length = int(9*7) # 7 parameters and 9 bits for each parameter
+    bitstring_length = int(8*7) # 7 parameters and 9 bits for each parameter
     # algorithm configuration
     pop_size = 10
     mutation_rate = 0.8
-    generations = 50000
+    generations = 100000
     tournament_size = 2
     # execute the algorithm
     best, population = genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, tournament_size)
