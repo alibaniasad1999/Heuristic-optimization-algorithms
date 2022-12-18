@@ -121,13 +121,10 @@ def genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, to
     # ranked_population = rank_by_fitness(population, lower, upper)
     # run the algorithm for the given number of generations
     for i in range(generations):
-        print('Generation: ', i)
+        # print('Generation: ', i)
         # select parents
         parent1, dead1 = selection(population, tournament_size)
         parent2, dead2 = selection(population, tournament_size)
-        if (parent1 == parent2).all():
-            print('parent1 == parent2')
-            continue
         # crossover parents
         children = one_point_crossover(parent1, parent2)
         child1 = children[0]
@@ -135,18 +132,7 @@ def genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, to
         # mutate children
         child1 = mutation(child1, mutation_rate)
         child2 = mutation(child2, mutation_rate)
-        # print(population)
-        # evaluate fitness
-        # ranked_population = rank_by_fitness(population, lower, upper)
-        # replace least fit individual in population
-        # index_dead1 = np.argmax(population==dead1)
-        # index_dead2 = np.argmax(population==dead2)
-        # print(index_dead1, index_dead2)
-        # if index_dead1 > len(population):
-        #     index_dead1 = np.argwhere(population==dead1)[0][0]
-        # if index_dead2 > len(population):
-        #     index_dead2 = np.argwhere(population==dead2)[0][0]
-        # print(parent1, parent2, dead1, dead2, child1, child2)
+
         for i in range(len(population)):
             if (population[i] == dead1).all():
                 population[i] = np.copy(child1)
@@ -176,27 +162,44 @@ if __name__ == '__main__':
     generations = 50000
     tournament_size = 20
     # execute the algorithm
-    best, population = genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, tournament_size)
+    best_array = []
+    sol = []
+
+    for i in range(10):
+        print('Run: ', i)
+        best, population = genetic_algorithm(pop_size, bitstring_length, mutation_rate, generations, tournament_size)
+        best_array.append(fitness(best))
+        sol.append(best)
     print("Done.")
+    print('mean: ', np.mean(best_array), 'std: ', np.std(best_array), 'min: ', np.min(best_array), 'max: ', np.max(best_array))
+    best_all = math.inf
+    for i in sol:
+        if fitness(i) < best_all:
+            best = i
+            best_all = fitness(i)
+    
+    print('best: ', best_all)
+    print('best bitstring: ', best)
 
-print(best)
+    fig, ax = plt.subplots()
 
-plt.rcParams['text.usetex'] = True
-fig, ax = plt.subplots()
+    ax.plot(x, y, 'r', label='Data')
+    ax.plot(x, y_ans(bitstring_to_real(best)), 'b', label='Genetic Algorithm optimization')
 
-ax.plot(x, y, 'r', label='Data')
-ax.plot(x, y_ans(best), 'b', label='Genetic Algorithm optimization')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.legend()
+    name = 'Genetic Algorithm' + '_' + 'pop_size' + str(pop_size) + '_' + 'mutation_rate' + str(mutation_rate) + '_' + 'generations' + str(generations) + '_' + 'tournament_size' + str(tournament_size) + '.eps'
+    name = '../../Figure/Q1/' + name
+    plt.savefig(name, format='eps')
+    plt.show()
 
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.legend()
-name = 'Genetic Algorithm' + '_' + 'pop_size' + str(pop_size) + '_' + 'mutation_rate' + str(mutation_rate) + '_' + 'generations' + str(generations) + '_' + 'tournament_size' + str(tournament_size) + '.eps'
-name = '../../Figure/Q1/' + name
-plt.savefig(name, format='eps')
-plt.show()
+    fig1, ax1 = plt.subplots()
+    name  = name + 'map'
+    ax1.imshow(population, cmap='hot', interpolation='nearest')
+    ax1.set_xlabel('Chromosome')
+    ax1.set_ylabel('Population')
+    plt.savefig(name, format='eps')
+    plt.show()
 
-fig1, ax1 = plt.subplots()
 
-ax1.imshow(population, cmap='hot', interpolation='nearest')
-plt.savefig(name+'map', format='eps')
-plt.show()
