@@ -4,6 +4,7 @@ import numpy as np
 import random
 import math
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def cost_calculator(city_array):
@@ -44,11 +45,22 @@ def swap_random(city_list):
 
 # tabu search
 def tabu_search(city_list, max_iter, tabu_size):
+    cost = []
     tabu_list = [city_list.copy()]
     min_cost = cost_calculator(city_list)
     min_num = 0
     for i in range(max_iter):
         city_list = swap_random(city_list)
+        neighber_ans = city_list.copy()
+        min_neighber_ans = math.inf
+        for j in range(50):
+            city_list = swap_random(city_list)
+            # tabu_list.append(city_list.copy())
+            if cost_calculator(city_list) < min_neighber_ans:
+                min_neighber_ans = cost_calculator(city_list)
+                neighber_ans = city_list.copy()
+        city_list = neighber_ans.copy()
+
         if city_list not in tabu_list:
             print('not in tabu: ', i, 'tau len', len(tabu_list))
             tabu_list.append(city_list.copy())
@@ -57,18 +69,40 @@ def tabu_search(city_list, max_iter, tabu_size):
             if cost_calculator(city_list) < min_cost:
                 min_cost = cost_calculator(city_list)
                 min_num = i
+                # temp_cost = (cost_calculator(city_list))
+                # cost.append(temp_cost.copy())
         else:
             print('in tabu: ', i)
             city_list = swap_random(city_list)
-    return city_list, min_cost, min_num
+        
+        temp_cost = (cost_calculator(city_list))
+        cost.append(temp_cost.copy())
+    return city_list, min_cost, min_num, cost
 
 
-city_list = np.append([np.linspace(0, 9, 10, dtype=int)], [-1, -1])  # city_list is a list of city index
+city_list_array = []
+min_cost_array = []
+min_city_list = []
+min_cost = math.inf
+for i in range(1):
+    city_list = np.append([np.linspace(0, 9, 10, dtype=int)], [-1, -1])  # city_list is a list of city index
+    np.random.shuffle(city_list)
+    city_list = city_list.tolist()
+    print(city_list)
+    city_list, min_cost, min_num, cost = tabu_search(city_list, 10000, 500)
+    if min_cost < min_cost:
+        min_cost = min_cost
+        min_city_list = city_list.copy()
+    city_list_array.append(city_list)  # city_list_array is a list of city_list
+    min_cost_array.append(min_cost) # min_cost_array is a list of min_cost
 
-np.random.shuffle(city_list)
-city_list = city_list.tolist()
-print(city_list)
-city_list, min_cost, min_num = tabu_search(city_list, 1000, 500)
-print(city_list)
-print(min_cost)
-print(min_num)
+print('mean cost: ', np.mean(min_cost_array), 'std cost: ', np.std(min_cost_array), 'min cost: ', min(min_cost_array), 'max cost: ', max(min_cost_array))
+print('min city list: ', city_list_array, min_cost_array)
+
+# print the result
+fig, ax = plt.subplots()    
+ax.plot(cost)
+ax.set(xlabel='iteration', ylabel='cost')
+name = 'tabu' + '.pdf'
+name = '../../Figure/Q2/' + name
+plt.savefig(name, format='pdf')
