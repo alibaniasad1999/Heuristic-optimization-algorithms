@@ -48,6 +48,7 @@ def tabu_search(city_list, max_iter, tabu_size):
     for i in range(max_iter):
         city_list = swap_random(city_list)
         if city_list not in tabu_list:
+            print('not in tabu: ', i, 'tau len', len(tabu_list))
             tabu_list.append(city_list.copy())
             if len(tabu_list) > tabu_size:
                 tabu_list.pop(0)
@@ -55,6 +56,7 @@ def tabu_search(city_list, max_iter, tabu_size):
                 min_cost = cost_calculator(city_list)
                 min_num = i
         else:
+            print('in tabu: ', i)
             city_list = swap_random(city_list)
     return city_list, min_cost, min_num
 
@@ -64,7 +66,7 @@ city_list = np.append([np.linspace(0, 9, 10, dtype=int)], [-1, -1]) # city_list 
 np.random.shuffle(city_list)
 city_list = city_list.tolist()
 print(city_list)
-city_list, min_cost, min_num = tabu_search(city_list, 100000, 1000)
+city_list, min_cost, min_num = tabu_search(city_list, 1000, 500)
 print(city_list)
 print(min_cost)
 print(min_num)
