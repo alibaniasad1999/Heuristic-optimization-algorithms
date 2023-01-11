@@ -6,7 +6,10 @@ import math
 
 # Define the objective function
 def obj_func(x):
-    return sum(x*x) * (1 + random.random()) - 450
+    ans = 0
+    for i in range(len(x)):
+        ans += sum(x[0:i+1])**2
+    return ans * (1 + random.random()) - 450
 
 # Define the PSO algorithm
 def PSO(obj_func, lb, ub, dim, n_particles, n_iter):
