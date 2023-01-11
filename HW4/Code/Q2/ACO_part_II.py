@@ -107,9 +107,3 @@ def plot_solution(X, best_solution):
     plt.show()
 
 plot_solution(X, best_solution)
-
-# Visualising the pheromone matrix
-def plot_pheromone(pheromone):
-    plt.matshow(pheromone)
-    plt.title('Pheromone matrix')
-    plt.show()

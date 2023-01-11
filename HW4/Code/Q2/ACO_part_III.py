@@ -1,30 +1,28 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import imageio
 
 # Ant Colony Optimization
-# Part I - ACO for the Traveling Salesman Problem
+# Part II - ACO for the Traveling Salesman Problem with traffic
 
 # Importing the dataset
 dataset = pd.read_csv('pos.csv', header = None)
 X = dataset.iloc[:, [0, 1]].values
 
-# Visualising the cities
-plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
-plt.title('Cities')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.show()
+# Importing the traffic
+dataset = pd.read_csv('traffic.csv', header = None)
+traffic = dataset.iloc[:, :].values
 
 # Creating the graph
-def create_graph(X):
+def create_graph(X, traffic):
     graph = np.zeros((len(X), len(X)))
     for i in range(len(X)):
         for j in range(len(X)):
-            graph[i,j] = np.sqrt((X[i,0] - X[j,0])**2 + (X[i,1] - X[j,1])**2)
+            graph[i,j] = np.sqrt((X[i,0] - X[j,0])**2 + (X[i,1] - X[j,1])**2) / traffic[i,j]
     return graph
 
-graph = create_graph(X)
+graph = create_graph(X, traffic)
 
 # Implementing ACO
 def ACO(graph, n_ants, n_iterations, alpha, beta, rho, Q):
@@ -91,15 +89,29 @@ def ACO(graph, n_ants, n_iterations, alpha, beta, rho, Q):
                 best_solution = ants[j]
     return best_solution, best_length
 
-best_solution, best_length = ACO(graph, n_ants = 10, n_iterations = 100, alpha = 1.0, beta = 5.0, rho = 0.5, Q = 100)
-
-# Visualising the results
+# Visualising the solution
 def plot_solution(X, best_solution):
     plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
     plt.plot(X[best_solution,0], X[best_solution,1], color = 'blue', alpha = 0.7)
-    plt.title('Best solution found')
+    plt.title(f'Best solution found time = {i+1}')
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.show()
+    plt.savefig(f'../../Figure/Q2/time_varing_traffic_img_{i}.png')
+    plt.close()
 
-plot_solution(X, best_solution)
+for i in range(10):
+    best_solution, best_length = ACO(graph, n_ants = 10, n_iterations = 10, alpha = 1.0, beta = 5.0, rho = 0.5, Q = 100)
+    traffic = (traffic-1)**2+np.cos(10*(i+1)*traffic)**2
+    graph = create_graph(X, traffic)
+    print('Best solution: ', best_solution)
+    plot_solution(X, best_solution)
+
+
+frames = []
+for i in range(10):
+    image = imageio.v2.imread(f'../../Figure/Q2/time_varing_traffic_img_{i}.png')
+    frames.append(image)
+
+imageio.mimsave('../../Figure/Q2/time_varing_traffic_solution.gif', # output gif
+                frames,          # array of input frames
+                fps = 1)         # optional: frames per second
