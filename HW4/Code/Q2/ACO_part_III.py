@@ -99,12 +99,16 @@ def plot_solution(X, best_solution):
     plt.savefig(f'../../Figure/Q2/time_varing_traffic_img_{i}.png')
     plt.close()
 
+best_solution_sum = 0
 for i in range(10):
     best_solution, best_length = ACO(graph, n_ants = 10, n_iterations = 100, alpha = 1.0, beta = 5.0, rho = 0.5, Q = 100)
     traffic = (traffic-1)**2+np.cos(10*(i+1)*traffic)**2
     graph = create_graph(X, traffic)
-    print('Best solution length: ', best_length)
+    print(f'Best solution found time = {i+1}: {best_length}')
     plot_solution(X, best_solution)
+    best_solution_sum += best_length
+
+print(f'Best solution found: {best_solution_sum}')
 
 
 frames = []

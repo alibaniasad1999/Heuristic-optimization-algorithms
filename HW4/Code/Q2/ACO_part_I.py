@@ -10,11 +10,12 @@ dataset = pd.read_csv('pos.csv', header = None)
 X = dataset.iloc[:, [0, 1]].values
 
 # Visualising the cities
+csfont = {'fontname':'Times New Roman'}
 plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
-plt.title('Cities')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.show()
+plt.xlabel('X',**csfont,fontsize=24)
+plt.ylabel('Y',**csfont,fontsize=24)
+plt.savefig('../../Figure/Q2/Cities.eps', format='eps', dpi=1000)
+plt.close()
 
 # Creating the graph
 def create_graph(X):
@@ -97,10 +98,10 @@ best_solution, best_length = ACO(graph, n_ants = 10, n_iterations = 100, alpha =
 def plot_solution(X, best_solution):
     plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
     plt.plot(X[best_solution,0], X[best_solution,1], color = 'blue', alpha = 0.7)
-    plt.title('Best solution found')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.show()
+    plt.xlabel('X',**csfont,fontsize=24)
+    plt.ylabel('Y',**csfont,fontsize=24)
+    plt.savefig('../../Figure/Q2/ACO_solution_1.eps', format='eps', dpi=1000)
+    plt.close()
 
-# plot_solution(X, best_solution)
+plot_solution(X, best_solution)
 print(best_length)

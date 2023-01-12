@@ -10,11 +10,11 @@ dataset = pd.read_csv('pos.csv', header = None)
 X = dataset.iloc[:, [0, 1]].values
 
 # Visualising the cities
-plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
-plt.title('Cities')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.show()
+# plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
+# plt.title('Cities')
+# plt.xlabel('X')
+# plt.ylabel('Y')
+# plt.show()
 
 # Importing the traffic
 dataset = pd.read_csv('traffic.csv', header = None)
@@ -61,7 +61,13 @@ def ACO(graph, n_ants, n_iterations, alpha, beta, rho, Q):
                     if k not in tabu_list:
                         p[k] = (pheromone[current_city, k]**alpha) * ((1.0/graph[current_city, k])**beta)
                 # Select next city
-                next_city = np.random.choice(n_cities, 1, p = p/p.sum())[0]
+                if sum(p) == 0:
+                    while True:
+                        next_city = np.random.choice(n_cities, 1)[0]
+                        if next_city not in tabu_list:
+                            break
+                else:
+                    next_city = np.random.choice(n_cities, 1, p = p/p.sum())[0]
                 # Add city to tour
                 tour.append(next_city)
                 # Add city to tabu list
@@ -95,15 +101,17 @@ def ACO(graph, n_ants, n_iterations, alpha, beta, rho, Q):
                 best_solution = ants[j]
     return best_solution, best_length
 
-best_solution, best_length = ACO(graph, n_ants = 10, n_iterations = 1000, alpha = 1.0, beta = 5.0, rho = 0.5, Q = 100)
+best_solution, best_length = ACO(graph, n_ants = 50, n_iterations = 10000, alpha = 1.0, beta = 5.0, rho = 0.5, Q = 100)
 
 # Visualising the results
 def plot_solution(X, best_solution):
     plt.scatter(X[:,0], X[:,1], s = 100, color = 'red')
     plt.plot(X[best_solution,0], X[best_solution,1], color = 'blue', alpha = 0.7)
-    plt.title('Best solution found')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.show()
+    csfont = {'fontname':'Times New Roman'}
+    plt.xlabel('X',**csfont,fontsize=24)
+    plt.ylabel('Y',**csfont,fontsize=24)
+    plt.savefig('../../Figure/Q2/ACO_traffic_solution.eps', format='eps', dpi=1000)
+    plt.close()
 
 plot_solution(X, best_solution)
+print(best_length)
