@@ -7,6 +7,9 @@
 \begin{equation}\label{eq:PSO_vel}
 	v = w v + C_1  N(0, 1)  (p_{best} - x) + C_2   N(0, 1)  (g_{best} - x)
 \end{equation}
+\begin{equation}
+	x = x + v
+\end{equation}
 در رابطه بالا ضرایب
  $w$, 
  $C_1$
@@ -18,34 +21,60 @@
  در نظر گرفته شده است.
  در این سوال خواسته بخش اول گزارش
  \lr{CEC2005}
- انجام شده است، ولی، در گزارش تنها بخشی از نمودارها آورده شده است و سایر نمودار ها در فایل
+ انجام شده است (با توجه به اینکه حجم محاسبات بالایی داشت و ددلاین نزدیک بود دیتاهای بدست آمده در جدول آورده شده است و سایر دیتاها به محض بدست آمدن اضافه خواهند شد و در
+ \href{https://github.com/alibaniasad1999/Heuristic-optimization-algorithms}{github}
+ به روزرسانی خواهد شد.)، ولی، در گزارش تنها بخشی از نمودارها آورده شده است و سایر نمودار ها در فایل
  \lr{Figure}
- است.
+و بخش
+\ref{sec:appendix}
+است.
+ پارامترهای الگوریتم \lr{PSO} در جدول
+ \ref{tab:PSO_par}
+ آورده شده است.
  \begin{figure}[H]\label{fig:ring}
- 	\caption{توپولوژی حلقه} 
+ 	\caption{توپولوژی همسایگی حلقه} 
  	\centering 
  	\includegraphics[width=8cm]{../Figure/Q1/ring.jpg} 
  \end{figure}
 
- \begin{figure}[H]\label{fig:ring}
+
+\lr{\begin{table}[H]
+		\caption{Parameter of ACO}
+		\vspace{0.5cm}
+		\centering
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\lr{Value} & \lr{Parameter}\\
+			\hline
+			20 & \lr{Number of Particles}\\
+			\hline
+			2 & $C_1$\\
+			2 & $C_2$\\
+			0.5 & $w$\\
+			\hline
+		\end{tabular}
+		\label{tab:PSO_par}
+\end{table}}
+
+ \begin{figure}[H]
 	\caption{نمودار همگرایی الگوریتم \lr{PSO} تابع شماره یک ($D=10$) برای ۱۰۰۰ تکرار } 
 	\centering 
 	\includegraphics[width=16cm]{../Figure/Q1/PSO_convergence_curve} 
 \end{figure}
 
- \begin{figure}[H]\label{fig:ring}
+ \begin{figure}[H]
 	\caption{نمودار \lr{inertia weight} الگوریتم \lr{PSO} تابع شماره یک ($D=10$) برای ۱۰۰۰ تکرار } 
 	\centering 
 	\includegraphics[width=16cm]{../Figure/Q1/PSO_inertia_weight} 
 \end{figure}
 
- \begin{figure}[H]\label{fig:ring}
+ \begin{figure}[H]
 	\caption{نمودار همگرایی الگوریتم \lr{PSO} تابع شماره دو ($D=10$) برای ۱۰۰۰ تکرار } 
 	\centering 
 	\includegraphics[width=16cm]{../Figure/Q1/PSO_II_convergence_curve} 
 \end{figure}
 
-\begin{figure}[H]\label{fig:ring}
+\begin{figure}[H]
 	\caption{نمودار \lr{inertia weight} الگوریتم \lr{PSO} تابع شماره دو ($D=10$) برای ۱۰۰۰ تکرار } 
 	\centering 
 	\includegraphics[width=16cm]{../Figure/Q1/PSO_II_inertia_weight} 
