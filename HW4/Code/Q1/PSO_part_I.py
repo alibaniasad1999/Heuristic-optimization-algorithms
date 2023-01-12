@@ -67,7 +67,7 @@ def PSO(obj_func, lb, ub, dim, n_particles, n_iter):
 lb = -100
 ub = 100
 dim = 10
-n_particles = 80
+n_particles = 20
 n_iter = 1000
 
 # Run the PSO algorithm
