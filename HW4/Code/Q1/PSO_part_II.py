@@ -9,7 +9,7 @@ def obj_func(x):
     ans = 0
     for i in range(len(x)):
         ans += sum(x[0:i+1])**2
-    return ans * (1 + random.random()) - 450
+    return ans * (1 + 0.4 * random.random()) - 450
 
 # Define the PSO algorithm
 def PSO(obj_func, lb, ub, dim, n_particles, n_iter):

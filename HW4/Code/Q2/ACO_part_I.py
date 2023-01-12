@@ -102,4 +102,5 @@ def plot_solution(X, best_solution):
     plt.ylabel('Y')
     plt.show()
 
-plot_solution(X, best_solution)
+# plot_solution(X, best_solution)
+print(best_length)
