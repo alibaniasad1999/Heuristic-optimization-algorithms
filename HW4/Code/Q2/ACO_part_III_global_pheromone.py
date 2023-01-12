@@ -24,11 +24,17 @@ def create_graph(X, traffic):
 
 graph = create_graph(X, traffic)
 
+n_cities = len(graph)
+# Initialize pheromone
+global pheromone
+pheromone = np.ones((n_cities, n_cities))
+
 # Implementing ACO
 def ACO(graph, n_ants, n_iterations, alpha, beta, rho, Q):
+    global pheromone
     n_cities = len(graph)
     # Initialize pheromone
-    pheromone = np.ones((n_cities, n_cities))
+    # pheromone = np.ones((n_cities, n_cities))
     # Initialize best length
     best_length = np.inf
     # Initialize best solution
@@ -96,7 +102,7 @@ def plot_solution(X, best_solution):
     plt.title(f'Best solution found time = {i+1}')
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.savefig(f'../../Figure/Q2/time_varing_traffic_img_{i}.png')
+    plt.savefig(f'../../Figure/Q2/time_varing_traffic_img_gph_{i}.png')
     plt.close()
 
 for i in range(10):
@@ -107,11 +113,12 @@ for i in range(10):
     plot_solution(X, best_solution)
 
 
+
 frames = []
 for i in range(10):
-    image = imageio.v2.imread(f'../../Figure/Q2/time_varing_traffic_img_{i}.png')
+    image = imageio.v2.imread(f'../../Figure/Q2/time_varing_traffic_img_gph_{i}.png')
     frames.append(image)
 
-imageio.mimsave('../../Figure/Q2/time_varing_traffic_solution.gif', # output gif
+imageio.mimsave('../../Figure/Q2/time_varing_traffic_solution_gph.gif', # output gif
                 frames,          # array of input frames
                 fps = 1)         # optional: frames per second
