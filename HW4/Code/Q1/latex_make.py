@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
-data = pd.read_csv('PSO_I10ite100000.csv', header=None)
+data = pd.read_csv('PSO_I50ite100000.csv', header=None)
 data = data.to_numpy()
 data = data.reshape(1, len(data))
 data.sort()
 
-data1 = pd.read_csv('PSO_II10ite100000.csv', header=None)
+data1 = pd.read_csv('PSO_II50ite100000.csv', header=None)
 data1 = data1.to_numpy()
 data1 = data1.reshape(1, len(data1))
 data1.sort()
