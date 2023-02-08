@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def denorm(data, domain):
     domain.sort()
     return data * (domain[:, 1] - domain[:, 0]) + domain[:, 0]  # data * (max - min) + min

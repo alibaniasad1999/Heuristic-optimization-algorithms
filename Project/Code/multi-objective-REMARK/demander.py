@@ -1,5 +1,6 @@
 import numpy as np
 from property import Property
+from paretoset import paretoset
 
 
 class Demander:
@@ -29,21 +30,56 @@ class Demander:
 
     def move(self):
         self.current_location = self.next_location
-        if self.next_location.value() > self.best_location.value():
+        values_current_next = np.array([self.current_location.value(), self.best_location.value()])
+        current_next_pareto_opt = paretoset(-values_current_next)
+
+        if current_next_pareto_opt[0]:  # maybe with random will do it better
             self.best_location = self.current_location
 
     def communication(self, k_sigma_d):
-        self.next_location = Property(location=np.copy(self.best_location.location),
-                                      objective_function=self.best_location.objective_function,
-                                      domain=self.best_location.domain, price=self.best_location.price,
-                                      demand=self.best_location.demand, supply=self.best_location.supply)
+        if len(self.friend) == 0:
+            self.next_location = Property(location=np.copy(self.best_location.location),
+                                          objective_function=self.best_location.objective_function,
+                                          domain=self.best_location.domain, price=self.best_location.price,
+                                          demand=self.best_location.demand, supply=self.best_location.supply)
+            return
 
-        for i in self.friend:
-            if i.best_location.value() > self.best_location.value():
-                self.next_location = Property(location=np.copy(i.best_location.location),
-                                              objective_function=i.best_location.objective_function,
-                                              domain=i.best_location.domain, price=i.best_location.price,
-                                              demand=i.best_location.demand, supply=i.best_location.supply)
+        best_location_array = np.zeros((len(self.friend), len(self.current_location.domain)))
+
+        for counter, i in enumerate(self.friend):
+            best_location_array[counter] = i.best_location.value()
+
+        max_value_pareto_opt = paretoset(-best_location_array)
+        pareto_optimum_max = np.where(max_value_pareto_opt)[0]
+
+        distance = np.zeros((len(pareto_optimum_max), len(self.current_location.domain)))
+
+        for counter, i in enumerate(pareto_optimum_max):
+            distance[counter] = self.current_location.location - self.friend[i].best_location.location
+
+        distance_norm = [np.linalg.norm(i) for i in distance]
+
+        if sum(sum(distance)) == 0:
+            self.next_location = Property(
+                location=np.copy(self.current_location.location),
+                objective_function=self.current_location.objective_function,
+                domain=self.current_location.domain,
+                price=self.current_location.price,
+                demand=self.current_location.demand,
+                supply=self.current_location.supply)
+            return
+
+        distance_norm_normalized = distance_norm / sum(distance_norm)
+
+        next_best_location_index = np.random.choice(pareto_optimum_max, p=distance_norm_normalized)
+
+        self.next_location = Property(location=np.copy(self.friend[next_best_location_index].best_location.location),
+                                      objective_function=self.friend[
+                                          next_best_location_index].best_location.objective_function,
+                                      domain=self.friend[next_best_location_index].best_location.domain,
+                                      price=self.friend[next_best_location_index].best_location.price,
+                                      demand=self.friend[next_best_location_index].best_location.demand,
+                                      supply=self.friend[next_best_location_index].best_location.supply)
 
         next_location_mean = self.next_location.location
         next_location_std = k_sigma_d * abs(self.next_location.price) * np.sqrt(-2 * np.log(self.purchase_power))

@@ -1,4 +1,6 @@
 import numpy as np
+import collections.abc
+from paretoset import paretoset
 from property import Property
 from demander import Demander
 from supplier import Supplier
@@ -63,26 +65,82 @@ class Market:
 
     def supplier_update(self):
         n_supplier = np.ceil(self.k_num_s * len(self.suppliers))
-        max_value = -np.inf
-        max_price = -np.inf
-        min_value = np.inf
-        # ideal_property = None
+        # # values = np.zeros((2*len()))
+        # # for i in self.demanders:
+        # #     values.
+        # best_location_values = [i.best_location.value() for i in self.demanders]
+        # current_location_values = [i.best_location.value() for i in self.demanders]
+        # max_value = -np.inf
+        # max_price = -np.inf
+        # min_value = np.inf
+        # # ideal_property = None
+        demanders_location_values = [[], [], [],
+                                     []]  # first is location of the best location and current location, second is
+        # value of the best location and current location, third is price and forth is property
+        # (best or current which is grater)
+        for count, i in enumerate(self.demanders):  # wwwwwwrrrrrrrooooooonnnnnnggggggg
+            demanders_location_values[0].append(i.best_location.location)
+            demanders_location_values[0].append(i.current_location.location)
+            demanders_location_values[1].append(i.best_location.value())
+            demanders_location_values[1].append(i.current_location.value())
+            demanders_location_values[2].append(i.best_location.price)
+            demanders_location_values[2].append(i.current_location.price)
+            demanders_location_values[3].append(i.best_location)
+            demanders_location_values[3].append(i.current_location)
 
-        for i in self.demanders:
-            if i.best_location.value() > max_value:
-                max_value = np.copy(i.best_location.value())
-            if i.current_location.value() > max_value:
-                max_value = np.copy(i.current_location.value())
-            if i.best_location.value() < min_value:
-                min_value = np.copy(i.best_location.value())
-            if i.current_location.value() < min_value:
-                min_value = np.copy(i.current_location.value())
-            if i.current_location.price > max_price or np.isinf(i.current_location.price):
-                max_price = np.copy(i.current_location.price)
-                ideal_property = i.current_location
-            if i.best_location.price > max_price or np.isinf(i.current_location.price):
-                max_price = np.copy(i.best_location.price)
-                ideal_property = i.best_location
+        mask_max = paretoset(-np.array(demanders_location_values[1]))  # find pareto set max
+        mask_min = paretoset(np.array(demanders_location_values[1]))  # find pareto set min
 
-        [i.move(ideal_property, max_value, min_value, n_supplier, self.k_sigma_s) for i in
-         np.random.choice(self.suppliers, size=self.max_friends, replace=False)]
+        pareto_optimum_max = np.where(mask_max)[0]
+        pareto_optimum_min = np.where(mask_min)[0]
+
+        location_array = np.array(demanders_location_values[0])
+        price_array = np.array(demanders_location_values[2])
+        property_array = np.array(demanders_location_values[3])
+
+        best_price_array = [
+            [price_array[price_array.argsort()[0:min(len(pareto_optimum_min), len(pareto_optimum_max))]]],
+            [location_array[price_array.argsort()[0:min(len(pareto_optimum_min), len(pareto_optimum_max))]]],
+            [property_array[price_array.argsort()[0:min(len(pareto_optimum_min),
+                                                        len(pareto_optimum_max))]]]]  # first is best price value,
+        # second is location of best price value and third is property
+
+        # for i in self.demanders:
+        #     if i.best_location.value() > max_value:
+        #         max_value = np.copy(i.best_location.value())
+        #     if i.current_location.value() > max_value:
+        #         max_value = np.copy(i.current_location.value())
+        #     if i.best_location.value() < min_value:
+        #         min_value = np.copy(i.best_location.value())
+        #     if i.current_location.value() < min_value:
+        #         min_value = np.copy(i.current_location.value())
+        #     if i.current_location.price > max_price or np.isinf(i.current_location.price):
+        #         max_price = np.copy(i.current_location.price)
+        #         ideal_property = i.current_location
+        #     if i.best_location.price > max_price or np.isinf(i.current_location.price):
+        #         max_price = np.copy(i.best_location.price)
+        #         ideal_property = i.best_location
+
+        for i in np.random.choice(self.suppliers, size=self.max_friends, replace=False):
+            distance = np.linalg.norm(i.current_location.location - best_price_array[1])
+            if not (isinstance(distance, collections.abc.Sequence)):  # check is scaler or array
+                ideal_property = best_price_array[2][0]
+                max_value = pareto_optimum_max[0]
+                min_value = pareto_optimum_min[0]
+            else:
+                ideal_property = np.random.choice(np.array(best_price_array[2]).reshape(-1),
+                                                  distance / np.sum(distance))
+                distance_max = np.linalg.norm(
+                    np.array(demanders_location_values[0])[mask_max] - i.current_location.location)
+                max_value = np.random.choice(np.array(demanders_location_values[1])[mask_max].reshape(-1),
+                                             distance_max / sum(distance_max))
+
+                distance_min = np.linalg.norm(
+                    np.array(demanders_location_values[0])[mask_min] - i.current_location.location)
+                min_value = np.random.choice(np.array(demanders_location_values[1])[mask_max].reshape(-1),
+                                             distance_min / sum(distance_min))
+
+            i.move(ideal_property, max_value, min_value, n_supplier, self.k_sigma_s)
+
+        # [i.move(ideal_property, max_value, min_value, n_supplier, self.k_sigma_s) for i in
+        #  np.random.choice(self.suppliers, size=self.max_friends, replace=False)]
