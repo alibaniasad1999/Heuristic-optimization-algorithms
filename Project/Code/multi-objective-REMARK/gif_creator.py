@@ -3,8 +3,8 @@ import contextlib
 from PIL import Image
 
 # filepaths
-fp_in = "../../Figure/iteration_*.png"
-fp_out = "../../Figure/animation.gif"
+fp_in = "../../Figure/iteration_3d_*.png"
+fp_out = "../../Figure/animation_3d.gif"
 
 # use exit stack to automatically close opened images
 with contextlib.ExitStack() as stack:
