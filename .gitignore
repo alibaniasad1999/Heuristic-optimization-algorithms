@@ -5,6 +5,8 @@
 */*/*/slprj/
 *.asv
 *.autosave
+*/__pychache__/*
+__pycache__
 #*.mat
 ## Core latex/pdflatex auxiliary files:
 *.aux
