@@ -3,14 +3,14 @@ import contextlib
 from PIL import Image
 
 # filepaths
-fp_in = "../../Figure/iteration_3d_*.png"
-fp_out = "../../Figure/animation_3d.gif"
+fp_in = "../../Figure/iteration_*.png"
+fp_out = "../../Figure/animation.gif"
 
 # use exit stack to automatically close opened images
 with contextlib.ExitStack() as stack:
     # lazily load images
-    images = (stack.enter_context(Image.open(f))
-              for f in sorted(glob.glob(fp_in)))
+    images = (stack.enter_context(Image.open(f"../../Figure/iteration_{i}.png"))
+              for i in range(int(len(glob.glob(fp_in))/2)))
 
     # extract  first image from iterator
     img = next(images)
