@@ -33,7 +33,7 @@ def objective_function(location):
     ans = 0
     for i in range(len(location)):
         ans += sum(location[0:i + 1]) ** 2
-    return [-np.sum(location ** 2), -ans, -ans * (1 + 0.1 * np.random.random())]
+    return [-np.sum((location-5) ** 2), -ans, -ans * (1 + 0.1 * np.random.random())]
 
 
 domain: ndarray = np.array([[-65, 65], [-65, 65], [-65, 65]])
@@ -41,7 +41,7 @@ domain: ndarray = np.array([[-65, 65], [-65, 65], [-65, 65]])
 market = Market(objective_function=objective_function, domain=domain, demander_number=80, supplier_number=20,
                 max_friends=20, characteristics_length=np.sqrt(len(domain)), k_sigma_d=0.7, k_sigma_s=0.7, k_num_s=0.4)
 
-n_iteration = 100
+n_iteration = 200
 value_history = np.zeros(n_iteration)
 max_value = 0
 best_place = 0
@@ -72,6 +72,7 @@ if len(domain) == 2:
     plot(np.array(history_np_array)[:, 0], np.array(history_np_array)[:, 1], n_iteration, 'demander')
     plt.show()
 if len(domain) == 3:
+
     plot_3d(np.array(history)[:, 0], np.array(history)[:, 1], np.array(history)[:, 2], np.array(history_np_array)[:, 0],
             np.array(history_np_array)[:, 1], np.array(history_np_array)[:, 2], i, 'demander', 'pareto optimum')
     plt.show()
